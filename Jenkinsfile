@@ -3,25 +3,32 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                // Checkout the repository
                 checkout scm
             }
         }
-        stage('Build') {
+        stage('Verify Files') {
             steps {
-                sh 'echo "Building..."'
-                // Add build commands, e.g., `npm install` or `mvn clean install`
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'echo "Running tests..."'
-                // Add testing commands, e.g., `npm test` or `mvn test`
+                // Check if the required files are present
+                script {
+                    if (!fileExists('index.html') || !fileExists('style.css')) {
+                        error("Required files 'index.html' or 'style.css' are missing!")
+                    } else {
+                        echo "Files 'index.html' and 'style.css' found in the repository."
+                    }
+                }
             }
         }
         stage('Deploy') {
             steps {
-                sh 'echo "Deploying..."'
-                // Add deployment commands
+                // Example: Copy files to a deployment directory
+                sh '''
+                echo "Deploying files..."
+                mkdir -p /path/to/deploy/directory
+                cp index.html /path/to/deploy/directory/
+                cp style.css /path/to/deploy/directory/
+                echo "Deployment complete."
+                '''
             }
         }
     }
