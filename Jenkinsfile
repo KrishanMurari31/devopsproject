@@ -3,13 +3,11 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the repository
                 checkout scm
             }
         }
         stage('Verify Files') {
             steps {
-                // Check if the required files are present
                 script {
                     if (!fileExists('index.html') || !fileExists('style.css')) {
                         error("Required files 'index.html' or 'style.css' are missing!")
@@ -21,13 +19,12 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                // Example: Copy files to a deployment directory
-                sh '''
-                echo "Deploying files..."
-                mkdir -p /path/to/deploy/directory
-                cp index.html /path/to/deploy/directory/
-                cp style.css /path/to/deploy/directory/
-                echo "Deployment complete."
+                bat '''
+                echo Deploying files...
+                if not exist "C:\\deploy" mkdir C:\\deploy
+                copy index.html C:\\deploy\\
+                copy style.css C:\\deploy\\
+                echo Deployment complete.
                 '''
             }
         }
